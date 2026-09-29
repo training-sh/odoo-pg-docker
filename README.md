@@ -3,6 +3,8 @@
 Odoo 19 Community and PostgreSQL 16, with built-in demo data for Contacts,
 CRM, Sales, Purchase, Inventory, Invoicing, and eCommerce.
 
+
+
 ## Connect
 
 Open **http://your-hostname:9999**. Replace `your-hostname` with your server hostname.
@@ -29,8 +31,18 @@ Within Docker, PostgreSQL is `odoopgsql:5432` and Odoo is `odoo:8069`.
 Install Docker with Compose v2 on the computer that will run the services.
 Clone the course repository and, from its root directory, run:
 
+
+open terminal 
+
+```
+git clone https://github.com/training-sh/odoo-pg-docker
+```
+
+```
+cd odoo-pg-docker
+```
+
 ```bash
-cd capstone/training-odoo
 docker compose up -d --wait --wait-timeout 900
 docker compose ps -a
 docker compose logs --tail=60 odoo-init odoo
