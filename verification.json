@@ -1,0 +1,35 @@
+{
+  "web_login": {
+    "login": "team",
+    "uid": 2
+  },
+  "wal_level": "logical",
+  "modules": {
+    "account": "installed",
+    "contacts": "installed",
+    "crm": "installed",
+    "purchase": "installed",
+    "sale_management": "installed",
+    "stock": "installed",
+    "website_sale": "installed"
+  },
+  "rows": {
+    "res_partner": 44,
+    "product_product": 53,
+    "sale_order": 40,
+    "purchase_order": 11,
+    "account_move": 56,
+    "stock_move": 90
+  },
+  "publication_tables": [
+    "account_move",
+    "account_move_line",
+    "product_product",
+    "product_template",
+    "res_partner",
+    "sale_order",
+    "sale_order_line",
+    "stock_move"
+  ],
+  "logical_decoder": "test_decoding temporary slot created and queried"
+}

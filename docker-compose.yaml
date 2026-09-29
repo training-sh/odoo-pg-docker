@@ -1,0 +1,79 @@
+name: odoo
+
+x-odoo: &odoo-common
+  image: odoo:19.0
+  environment:
+    HOST: odoopgsql
+    PORT: "5432"
+    USER: team
+    PASSWORD: team1234
+  volumes:
+    - training-odoo-data:/var/lib/odoo
+    - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    - ./init:/opt/training:ro
+
+services:
+  odoopgsql:
+    image: postgres:16
+    container_name: odoopgsql
+    hostname: odoopgsql
+    environment:
+      POSTGRES_USER: team
+      POSTGRES_PASSWORD: team1234
+      POSTGRES_DB: odoo
+    command: ["postgres", "-c", "wal_level=logical", "-c", "max_replication_slots=10", "-c", "max_wal_senders=10", "-c", "max_slot_wal_keep_size=1GB"]
+    ports:
+      - "${BIND_IP:-0.0.0.0}:55432:5432"
+    volumes:
+      - training-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U team -d odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  odoo-init:
+    <<: *odoo-common
+    command: ["python3", "/opt/training/initialize.py"]
+    depends_on:
+      odoopgsql:
+        condition: service_healthy
+    restart: "no"
+
+  odoo:
+    <<: *odoo-common
+    container_name: odoo
+    hostname: odoo
+    command: ["odoo", "--database=odoo"]
+    ports:
+      - "${BIND_IP:-0.0.0.0}:9999:8069"
+    depends_on:
+      odoopgsql:
+        condition: service_healthy
+      odoo-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/login', timeout=10)"]
+      interval: 15s
+      timeout: 15s
+      start_period: 60s
+      retries: 20
+    restart: unless-stopped
+
+  adminer:
+    image: adminer:latest
+    container_name: odoo-adminer
+    hostname: odoo-adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: odoopgsql
+    ports:
+      - "8806:8080"
+    depends_on:
+      odoopgsql:
+        condition: service_healthy
+
+volumes:
+  training-postgres-data:
+  training-odoo-data:
