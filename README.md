@@ -36,6 +36,15 @@ paste this along with other include config like jupyter
 include /etc/nginx/snippets/pgweb.conf;
 ```
 
+```
+sudo nginx -t
+```
+
+```
+sudo systemctl restart nginx
+```
+
+
 
 ## Connect
 
