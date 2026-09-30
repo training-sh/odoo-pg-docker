@@ -47,7 +47,7 @@ services:
     hostname: odoo
     command: ["odoo", "--database=odoo"]
     ports:
-      - "${BIND_IP:-0.0.0.0}:80:8069"
+      - "${BIND_IP:-0.0.0.0}:8080:8069"
     depends_on:
       odoopgsql:
         condition: service_healthy
@@ -69,7 +69,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: odoopgsql
     ports:
-      - "8080:8080"
+      - "8880:8080"
     depends_on:
       odoopgsql:
         condition: service_healthy
