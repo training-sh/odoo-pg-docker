@@ -74,6 +74,27 @@ services:
       odoopgsql:
         condition: service_healthy
 
+  pgweb:
+    image: sosedoff/pgweb:latest
+    container_name: odoo-pgweb
+    hostname: odoo-pgweb
+    restart: unless-stopped
+
+    environment:
+      PGWEB_DATABASE_URL: "postgres://team:team1234@odoopgsql:5432/odoo?sslmode=disable"
+
+    command:
+      - "/usr/bin/pgweb"
+      - "--bind=0.0.0.0"
+      - "--listen=8081"
+      - "--prefix=pgweb"
+
+    ports:
+      - "8807:8081"
+
+    depends_on:
+      odoopgsql:
+        condition: service_healthy
 volumes:
   training-postgres-data:
   training-odoo-data:
