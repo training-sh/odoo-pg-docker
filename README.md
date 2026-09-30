@@ -2,19 +2,7 @@
 
 Odoo 19 Community and PostgreSQL 16, with built-in demo data for Contacts,
 CRM, Sales, Purchase, Inventory, Invoicing, and eCommerce.
-
-for 1 GB RAM instance, only on need basics, enable swap memory in case ram is not sufficient. 
-
-```
-sudo fallocate -l 2G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-
-echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
-
-free -h
-```
+ 
 
 ## Connect
 
