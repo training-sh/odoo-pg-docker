@@ -2,7 +2,40 @@
 
 Odoo 19 Community and PostgreSQL 16, with built-in demo data for Contacts,
 CRM, Sales, Purchase, Inventory, Invoicing, and eCommerce.
- 
+
+# Nginx patch
+
+
+## PGWeb
+
+```
+sudo tee /etc/nginx/snippets/pgweb.conf > /dev/null <<'EOF'
+location = /pgweb {
+    return 301 /pgweb/;
+}
+
+location /pgweb/ {
+    proxy_pass http://127.0.0.1:8807/pgweb/;
+
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+}
+EOF
+```
+
+```
+sudo nano /etc/nginx/sites-available/default
+```
+
+paste this along with other include config like jupyter
+
+```
+include /etc/nginx/snippets/pgweb.conf;
+```
+
 
 ## Connect
 
